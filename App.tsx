@@ -1,118 +1,94 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * Generated with the TypeScript template
- * https://github.com/react-native-community/react-native-template-typescript
- *
- * @format
- */
-
-import React from 'react';
+import * as React from 'react';
+import {NavigationContainer, ParamListBase} from '@react-navigation/native';
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-  LogBox,
-} from 'react-native';
+  createNativeStackNavigator,
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
+import {Text, TouchableHighlight, View, LogBox, Pressable} from 'react-native';
+import {useCallback} from 'react';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
-
-const Section: React.FC<{
-  title: string;
-}> = ({children, title}) => {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
+type RootStackParamList = {
+  Home: undefined;
+  Details: undefined;
 };
+type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
+type DetailsScreenProps = NativeStackScreenProps<ParamListBase, 'Details'>;
 
-const App = () => {
+function HomeScreen({navigation, route}: HomeScreenProps) {
+  const onClick = useCallback(() => {
+    navigation.navigate('Details');
+  }, [navigation]);
+
+  return (
+    <>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: 'yellow',
+          alignItems: 'flex-end',
+          justifyContent: 'center',
+        }}>
+        <Pressable
+          onPress={onClick}
+          style={{paddingTop: 20, paddingBottom: 20, backgroundColor: 'blue'}}>
+          <Text style={{color: 'white'}}>Home Screen</Text>
+        </Pressable>
+      </View>
+      <View style={{flex: 2, backgroundColor: 'orange'}}>
+        <Text>Seconds</Text>
+      </View>
+    </>
+  );
+}
+
+function DetailsScreen({navigation}: DetailsScreenProps) {
+  const onClick = useCallback(() => {
+    navigation.navigate('Home');
+  }, [navigation]);
+
+  const onBack = useCallback(() => {
+    navigation.goBack();
+  }, [navigation]);
+
+  return (
+    <>
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <TouchableHighlight onPress={onClick}>
+          <Text>Details Screen</Text>
+        </TouchableHighlight>
+      </View>
+      <View>
+        <Pressable onPress={onBack}>
+          <Text>뒤로 가기</Text>
+        </Pressable>
+      </View>
+    </>
+  );
+}
+
+const Stack = createNativeStackNavigator();
+
+function App() {
   LogBox.ignoreLogs(['Remote debugger']);
 
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={{title: 'Overview', headerShown: false}}
+        />
+        <Stack.Screen name="Details">
+          {props => <DetailsScreen {...props} />}
+        </Stack.Screen>
+        {/* <Stack.Screen
+          name='Details'
+          component={DetailScreen}
+        /> */}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-};
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+}
 
 export default App;
