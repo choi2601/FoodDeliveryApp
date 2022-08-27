@@ -30,7 +30,7 @@ const orderSlice = createSlice({
     addOrder(state, action: PayloadAction<Order>) {
       state.orders.push(action.payload);
     },
-    acceztOrder(state, action: PayloadAction<string>) {
+    acceptOrder(state, action: PayloadAction<string>) {
       const index = state.orders.findIndex(v => v.orderId === action.payload);
       if (index > -1) {
         state.deliveries.push(state.orders[index]);
