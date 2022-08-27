@@ -90,13 +90,13 @@ function SignUp({navigation}: SignUpScreenProps) {
 
       console.log(response);
       Alert.alert('알림', '회원가입 되었습니다.');
+      navigation.navigate('SignIn');
     } catch (error) {
       const errorResponse = (error as AxiosError).response;
 
       if (errorResponse) {
         Alert.alert('알림', errorResponse.data.message);
       }
-    } finally {
       setLoading(false);
     }
   }, [email, name, password, loading]);
