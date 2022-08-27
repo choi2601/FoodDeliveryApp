@@ -16,6 +16,7 @@ import store, {useAppDispatch} from './src/store';
 import {RootState} from './src/store/reducer';
 import useSocket from './src/hooks/useSocket';
 import userSlice from './src/slices/user';
+import orderSlice from './src/slices/order';
 
 export type LoggedInParamList = {
   Orders: undefined;
@@ -41,6 +42,7 @@ function AppInner() {
   useEffect(() => {
     const callback = (data: any) => {
       console.log(data);
+      dispatch(orderSlice.actions.addOrder(data));
     };
     if (socket && isLoggedIn) {
       socket.emit('acceptOrder', 'hello');
