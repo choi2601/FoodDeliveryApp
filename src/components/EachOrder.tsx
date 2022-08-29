@@ -17,6 +17,7 @@ import NaverMapView, {Marker, Path} from 'react-native-nmap';
 import {RootState} from '../store/reducer';
 import orderSlice, {Order} from '../slices/order';
 import {LoggedInParamList} from '../../App';
+import getDistanceFromLatLonInKm from '../util';
 
 interface EachOrderProps {
   item: Order;
@@ -77,6 +78,15 @@ function EachOrder({item}: EachOrderProps) {
         </Text>
         <Text>삼성동</Text>
         <Text>왕십리동</Text>
+        <Text style={styles.eachInfo}>
+          {getDistanceFromLatLonInKm(
+            start.latitude,
+            start.longitude,
+            end.latitude,
+            end.longitude,
+          ).toFixed(1)}
+          km
+        </Text>
       </Pressable>
       {detail && (
         <View>
@@ -88,10 +98,10 @@ function EachOrder({item}: EachOrderProps) {
             }}>
             <NaverMapView
               style={{width: '100%', height: '100%'}}
-              zoomControl={false}
+              zoomControl={true}
               center={{
                 zoom: 10,
-                tilt: 50,
+                tilt: 20,
                 latitude: (start.latitude + end.latitude) / 2,
                 longitude: (start.longitude + end.longitude) / 2,
               }}>
@@ -128,7 +138,7 @@ function EachOrder({item}: EachOrderProps) {
               {loading ? (
                 <ActivityIndicator color="white" />
               ) : (
-                <Text style={styles.buttonText}>수락</Text>
+                <Text style={styles.buttonText}>거절</Text>
               )}
             </Pressable>
           </View>
