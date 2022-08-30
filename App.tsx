@@ -15,6 +15,7 @@ import SignUp from './src/pages/SignUp';
 import store, {useAppDispatch} from './src/store';
 import {RootState} from './src/store/reducer';
 import useSocket from './src/hooks/useSocket';
+import usePermissions from './src/hooks/usePermissions';
 import userSlice from './src/slices/user';
 import orderSlice from './src/slices/order';
 
@@ -38,6 +39,8 @@ function AppInner() {
 
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
   const [socket, disconnect] = useSocket();
+
+  usePermissions();
 
   useEffect(() => {
     const callback = (data: any) => {
