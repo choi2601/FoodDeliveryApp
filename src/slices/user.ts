@@ -5,6 +5,7 @@ const initialState = {
   email: '',
   accessToken: '',
   money: 0,
+  PhoneToken: '',
 };
 
 const userSlice = createSlice({
@@ -27,6 +28,9 @@ const userSlice = createSlice({
     },
     setAccessToken(state, action: PayloadAction<string>) {
       state.accessToken = action.payload;
+    },
+    setPhoneToken(state, action) {
+      state.PhoneToken = action.payload;
     },
   },
   extraReducers: builder => {},
