@@ -1,6 +1,6 @@
 {
   "name": "FoodDeliveryApp",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "postinstall": "patch-package",
@@ -8,7 +8,15 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "codepush:android": "appcenter codepush release-react -a choi11695-gmail.com/food-delivery-app-android -d Staging --sourcemap-output --output-dir ./build -m -t 1.0",
+    "codepush:ios": "appcenter codepush release-react -a choi11695-gmail.com/food-delivery-app-ios -d Staging --sourcemap-output --output-dir ./build -m -t 1.0",
+    "bundle:android": "react-native bundle --assets-dest build/CodePush --bundle-output build/CodePush/index.android.bundle --dev false --entry-file index.js --platform android --sourcemap-output build/CodePush/index.android.bundle.map",
+    "bundle:ios": "react-native bundle --assets-dest build/CodePush --bundle-output build/CodePush/main.jsbundle --dev false --entry-file index.js --platform ios --sourcemap-output build/CodePush/main.jsbundle.map",
+    "appcenter-android-key": "appcenter codepush deployment list -a choi11695-gmail.com/food-delivery-app-android -k",
+    "appcenter-ios-key": "appcenter codepush deployment list -a choi11695-gmail.com/food-delivery-app-ios -k",
+    "aab:android": "npm ci && cd android && ./gradlew bundleRelease && cd .. && open android/app/build/outputs/bundle/release",
+    "apk:android": "npm ci && cd android && ./gradlew assembleRelease && cd .. && open android/app/build/outputs/apk/release"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.9",
@@ -21,10 +29,14 @@
     "@react-navigation/native": "^6.0.11",
     "@react-navigation/native-stack": "^6.7.0",
     "@reduxjs/toolkit": "^1.8.5",
+    "appcenter": "4.4.5",
+    "appcenter-analytics": "4.4.5",
+    "appcenter-crashes": "4.4.5",
     "axios": "^0.24.0",
     "patch-package": "^6.4.7",
     "react": "17.0.2",
     "react-native": "0.66.4",
+    "react-native-code-push": "^7.0.5",
     "react-native-config": "^1.4.5",
     "react-native-encrypted-storage": "^4.0.2",
     "react-native-fast-image": "^8.6.0",
