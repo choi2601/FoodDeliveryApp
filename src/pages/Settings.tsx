@@ -1,12 +1,24 @@
 import React, {useCallback, useEffect} from 'react';
-import {Alert, Pressable, StyleSheet, Text, View, Platform} from 'react-native';
+import {
+  Alert,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  Platform,
+  FlatList,
+  Dimensions,
+} from 'react-native';
 import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
+import FastImage from 'react-native-fast-image';
 import {useAppDispatch} from '../store';
 import userSlice from '../slices/user';
 import {useSelector} from 'react-redux';
 import {RootState} from '../store/reducer';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import orderSlice from '../slices/order';
+import {Order} from '../slices/order';
 
 function Settings() {
   const dispatch = useAppDispatch();
@@ -14,6 +26,7 @@ function Settings() {
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const money = useSelector((state: RootState) => state.user.money);
   const name = useSelector((state: RootState) => state.user.name);
+  const completes = useSelector((state: RootState) => state.order.completes);
 
   const onLogout = useCallback(async () => {
     try {
@@ -64,6 +77,44 @@ function Settings() {
     getMoney();
   }, [accessToken, dispatch]);
 
+  useEffect(() => {
+    async function getCompletes() {
+      const response = await axios.get<{data: number}>(
+        `${
+          Platform.OS === 'android'
+            ? Config.API_ANDROID_URL
+            : Config.API_IOS_URL
+        }/completes`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      dispatch(orderSlice.actions.setCompletes(response.data.data));
+    }
+    getCompletes();
+  }, [dispatch, accessToken]);
+
+  const renderItem = useCallback(({item}: {item: Order}) => {
+    return (
+      <FastImage
+        source={{
+          uri: `${
+            Platform.OS === 'android'
+              ? Config.API_ANDROID_URL
+              : Config.API_IOS_URL
+          }/${item.image}`,
+        }}
+        resizeMode="contain"
+        style={{
+          height: Dimensions.get('window').width / 3,
+          width: Dimensions.get('window').width / 3,
+        }}
+      />
+    );
+  }, []);
+
   return (
     <View>
       <View style={styles.money}>
@@ -74,6 +125,14 @@ function Settings() {
           </Text>
           원
         </Text>
+      </View>
+      <View>
+        <FlatList
+          data={completes}
+          keyExtractor={o => o.orderId}
+          numColumns={3}
+          renderItem={renderItem}
+        />
       </View>
       <View style={styles.buttonZone}>
         <Pressable
