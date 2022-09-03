@@ -8,6 +8,8 @@ import Config from 'react-native-config';
 import {Provider, useSelector} from 'react-redux';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import SplashScreen from 'react-native-splash-screen';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Settings from './src/pages/Settings';
 import Orders from './src/pages/Orders';
 import Delivery from './src/pages/Delivery';
@@ -153,17 +155,26 @@ function AppInner() {
             <Tab.Screen
               name="Orders"
               component={Orders}
-              options={{title: '오더 목록'}}
+              options={{
+                title: '오더 목록',
+                tabBarIcon: () => <FontAwesome5 name="list" size={20} />,
+              }}
             />
             <Tab.Screen
               name="Delivery"
               component={Delivery}
-              options={{headerShown: false}}
+              options={{
+                headerShown: false,
+                tabBarIcon: () => <FontAwesome5 name="map" size={20} />,
+              }}
             />
             <Tab.Screen
               name="Settings"
               component={Settings}
-              options={{title: '내 정보'}}
+              options={{
+                title: '내 정보',
+                tabBarIcon: () => <FontAwesome5 name="info-circle" size={20} />,
+              }}
             />
           </Tab.Group>
         </Tab.Navigator>
