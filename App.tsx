@@ -7,6 +7,7 @@ import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import {Provider, useSelector} from 'react-redux';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import SplashScreen from 'react-native-splash-screen';
 import Settings from './src/pages/Settings';
 import Orders from './src/pages/Orders';
 import Delivery from './src/pages/Delivery';
@@ -109,6 +110,7 @@ function AppInner() {
       try {
         const token = await EncryptedStorage.getItem('refreshToken');
         if (!token) {
+          SplashScreen.hide();
           return;
         }
         const response = await axios.post(
@@ -137,6 +139,7 @@ function AppInner() {
         }
       } finally {
         // TODO: splash screen active off
+        SplashScreen.hide();
       }
     };
     getTokenAndRefresh();
